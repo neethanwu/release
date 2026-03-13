@@ -114,6 +114,68 @@ The new `[Unreleased]` section starts empty.
 
 If validation fails, restore CHANGELOG.md and the manifest, then stop with an error.
 
+### Step 5b: Update Comparison Links
+
+After the heading transformation succeeds, add or update reference-style comparison links
+at the bottom of CHANGELOG.md. These make version headings clickable on GitHub.
+
+**Detect the remote URL:**
+
+```bash
+remote_url=$(git remote get-url origin 2>/dev/null)
+```
+
+If no remote is configured, skip this sub-step with a note:
+"No git remote configured — changelog comparison links skipped."
+
+**Convert to HTTPS base URL:**
+- Strip trailing `.git`
+- Convert SSH format (`git@host:user/repo`) to `https://host/user/repo`
+- Convert `ssh://git@host/user/repo` to `https://host/user/repo`
+
+**Determine the previous version tag:**
+
+```bash
+prev_tag=$(git tag -l 'v*' --sort=-version:refname | head -1)
+```
+
+Note: at this point in the flow, the new tag has NOT been created yet (that happens in Step 7).
+So `head -1` gives the most recent existing tag, which is the previous version.
+
+If `prev_tag` is empty, this is a first release.
+
+**Build link definitions:**
+
+For a first release (no previous tags):
+```
+[Unreleased]: <base_url>/compare/vX.Y.Z...HEAD
+[X.Y.Z]: <base_url>/releases/tag/vX.Y.Z
+```
+
+For subsequent releases (previous tag exists):
+```
+[Unreleased]: <base_url>/compare/vX.Y.Z...HEAD
+[X.Y.Z]: <base_url>/compare/<prev_tag>...vX.Y.Z
+```
+
+**Apply to CHANGELOG.md:**
+
+Check if the file already contains reference-style link definitions (lines matching
+the pattern `^\[.+\]: https?://`).
+
+If link definitions exist:
+1. Replace the existing `[Unreleased]: ...` line with the new one
+2. Insert the new `[X.Y.Z]: ...` line immediately after the `[Unreleased]` line
+3. Preserve all other existing link definitions unchanged
+
+If no link definitions exist:
+1. Append a blank line to the end of the file
+2. Append the link definitions block
+
+**Validation:** After applying, confirm the `[Unreleased]:` and `[X.Y.Z]:` link
+definitions are present. If not, print a warning but do NOT stop the release —
+comparison links are supplementary, not release-blocking.
+
 ---
 
 ## Step 6: Show Changelog for Review

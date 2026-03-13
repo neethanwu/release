@@ -45,6 +45,26 @@ If this is a first release (no git tags exist):
 4. If declined, remind: "Remember to add your changes to the [Unreleased]
    section in CHANGELOG.md before running `/release`."
 
+### Seed Unreleased Link
+
+After creating or updating CHANGELOG.md, check if a git remote is configured:
+
+```bash
+remote_url=$(git remote get-url origin 2>/dev/null)
+```
+
+If a remote exists AND version tags exist:
+1. Convert remote URL to HTTPS base URL (same logic as release flow Step 5b)
+2. Get the latest tag: `latest_tag=$(git tag -l 'v*' --sort=-version:refname | head -1)`
+3. Append to CHANGELOG.md:
+   ```
+   [Unreleased]: <base_url>/compare/<latest_tag>...HEAD
+   ```
+
+If a remote exists but NO tags exist: do not add a link yet (no valid comparison target).
+
+If no remote: skip silently.
+
 ### Release Command Was Invoked
 
 If the user ran `/release patch` (or minor/major) and the `[Unreleased]` section
