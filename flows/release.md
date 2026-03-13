@@ -198,7 +198,7 @@ Files to commit:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Wait for confirmation before proceeding. This is the primary review checkpoint.
+**You MUST block for explicit user confirmation here — do not proceed until the user responds.** If your environment provides a tool for asking questions (e.g., `AskUserQuestion`), use it. Otherwise, stop and wait for the user's next message. This is the primary review checkpoint.
 
 ---
 
@@ -218,6 +218,8 @@ the adapter should specify which files to include.
 ---
 
 ## Step 8: Confirm Before Push
+
+**You MUST block for explicit user confirmation here — do not proceed until the user responds.** If your environment provides a tool for asking questions (e.g., `AskUserQuestion`), use it. Otherwise, stop and wait for the user's next message.
 
 Present the final confirmation before pushing to the remote:
 
