@@ -134,7 +134,7 @@ After a successful stable release (push completed), check and offer:
 
 1. **Pre-push hook not installed?** → "Would you like to install a pre-push hook to validate releases? It checks that tag versions match your package.json and changelog."
 
-2. **No CI publish workflow?** → "Would you like to generate GitHub Actions workflows for CI and automated publishing? Run `/release setup-ci`."
+2. **No CI publish workflow?** → Check if the remote contains `github.com`. If yes: "Would you like to generate GitHub Actions workflows for CI and automated publishing? Run `/release setup-ci`." If not on GitHub: "No CI publish workflow detected. `/release setup-ci` can generate GitHub Actions workflows if needed, but note that only GitHub Actions is supported at this time."
 
 These are suggestions only — never install automatically without confirmation.
 

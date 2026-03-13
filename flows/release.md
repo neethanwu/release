@@ -226,7 +226,7 @@ Parse the owner/repo from the URL and print:
 "Watch CI at: https://github.com/<owner>/<repo>/actions"
 
 **If not on GitHub** (no github.com in remote URL):
-Print: "Release complete! Check your CI system for publish status."
+Print: "Release complete! Check your CI system for publish status. Note: `/release setup-ci` currently supports GitHub Actions only."
 
 ---
 

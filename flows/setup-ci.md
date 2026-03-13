@@ -4,7 +4,31 @@ Generates GitHub Actions workflow files for CI testing and automated publishing.
 
 ---
 
-## Step 1: Check for Existing Workflows
+## Step 1: Detect CI Platform
+
+Check whether the project is hosted on GitHub:
+
+```bash
+remote_url=$(git remote get-url origin 2>/dev/null)
+```
+
+**If no remote is configured:**
+The project has no remote — workflows can still be generated locally. Note this and continue.
+
+**If the remote contains `github.com`:**
+Continue to Step 2.
+
+**If the remote does NOT contain `github.com`:**
+The project is hosted on a non-GitHub platform. Use the `AskUserQuestion` tool to ask the user whether to proceed, with two options:
+
+- **"Generate anyway"** — create GitHub Actions workflow files despite non-GitHub remote
+- **"Skip"** — skip CI workflow generation for now
+
+If the user selects **"Skip"**, stop. If **"Generate anyway"**, continue to Step 2.
+
+---
+
+## Step 2: Check for Existing Workflows
 
 Scan `.github/workflows/` for existing workflow files:
 
@@ -28,7 +52,7 @@ Only generate workflows that don't already exist.
 
 ---
 
-## Step 2: Detect Project Configuration
+## Step 3: Detect Project Configuration
 
 Gather the information needed to fill in template placeholders:
 
@@ -64,7 +88,7 @@ Check `publishConfig.registry` in package.json for custom registries.
 
 ---
 
-## Step 3: Generate Workflows
+## Step 4: Generate Workflows
 
 Read the templates and replace all placeholders:
 
@@ -91,7 +115,7 @@ Read the templates and replace all placeholders:
 
 ---
 
-## Step 4: Write Workflow Files
+## Step 5: Write Workflow Files
 
 ```bash
 mkdir -p .github/workflows
@@ -104,7 +128,7 @@ Write the generated workflows. Only write files that weren't skipped in step 1.
 
 ---
 
-## Step 5: Show Results
+## Step 6: Show Results
 
 Print what was generated:
 
