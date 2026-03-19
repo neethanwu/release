@@ -19,13 +19,6 @@ with a `version` field.
 - **Pre-release versions sort lexicographically in npm.** `1.0.0-alpha.10` sorts
   before `1.0.0-alpha.2` in npm's registry. Use `git tag --sort=-v:refname` (git
   version sort) when scanning for the latest pre-release sequence number.
-- **`pnpm publish` needs `--no-git-checks` from tagged commits.** pnpm detects
-  that HEAD is a tagged commit and complains about uncommitted lockfile changes
-  that don't actually exist. Add `--no-git-checks` in CI publish workflows.
-- **2FA can hang in non-interactive shells.** If the npm account has 2FA enabled
-  for publishing, `npm publish` blocks waiting for a OTP that can't be entered.
-  Use an automation token (`npm token create --type=automation`) or publish via
-  CI with `--provenance` and token auth.
 - **`npm pack --dry-run` output format differs between npm versions.** Don't
   parse the output programmatically — display it to the user as-is for review.
 

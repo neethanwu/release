@@ -85,8 +85,8 @@ Before proceeding, check for known unsupported configurations:
 ## Step 3: Check Infrastructure
 
 Check for CHANGELOG.md with an `## [Unreleased]` section (case-insensitive),
-a pre-push hook at `.git/hooks/pre-push`, and CI publish workflows in
-`.github/workflows/`.
+a pre-push hook at `.git/hooks/pre-push` containing release validation, and
+CI publish workflows in `.github/workflows/`.
 
 For `context`: report what's missing — don't offer to create anything.
 

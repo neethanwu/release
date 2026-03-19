@@ -23,10 +23,9 @@ ecosystem-specific commands.
 
 All three checks must pass before proceeding.
 
-**Optional accelerator:** Run the compound context block from
-[context.md](context.md#quick-context-single-command) first to gather all
-project state in a single command. Use the output to evaluate the checks below
-without additional round trips.
+**Optional accelerator:** Run the [Quick Context](context.md#quick-context-single-command)
+block first to gather all project state in a single command. Use the output to
+evaluate the checks below without additional round trips.
 
 ### Clean working directory
 

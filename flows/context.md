@@ -11,16 +11,20 @@ Gather all project context in a single command. This is faster than running
 each check individually, and other flows can reference this block to front-load
 context before precondition checks.
 
+This block assumes an npm-ecosystem project (Node.js available). Future
+adapters may need ecosystem-specific variants. Keep this block aligned with
+the Detailed Information section below — it mirrors those checks.
+
 ```bash
 echo "=== Release Context ==="
 echo "package: $(node -p "try{require('./package.json').name}catch(e){'not-found'}")"
 echo "version: $(node -p "try{require('./package.json').version}catch(e){'unknown'}")"
-echo "private: $(node -p "try{JSON.parse(require('fs').readFileSync('package.json','utf8')).private||false}catch(e){'unknown'}")"
+echo "private: $(node -p "try{require('./package.json').private||false}catch(e){'unknown'}")"
 echo "branch: $(git branch --show-current 2>/dev/null || echo 'detached')"
 echo "default_branch: $(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo 'unknown')"
 echo "last_tag: $(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || echo 'none')"
 echo "clean: $(git diff --quiet 2>/dev/null && git diff --cached --quiet 2>/dev/null && echo 'yes' || echo 'no')"
-echo "unreleased_lines: $(sed -n '/## \[Unreleased\]/,/## \[/p' CHANGELOG.md 2>/dev/null | grep -c '[^ ]' || echo '0')"
+echo "unreleased_lines: $(sed -n '/## \[[Uu]nreleased\]/,/## \[/p' CHANGELOG.md 2>/dev/null | grep -c '[^ ]' || echo '0')"
 echo "has_remote: $(git remote get-url origin >/dev/null 2>&1 && echo 'yes' || echo 'no')"
 echo "prepush_hook: $(test -f .git/hooks/pre-push && echo 'installed' || echo 'missing')"
 echo "ci_workflows: $(ls .github/workflows/*.yml 2>/dev/null | wc -l | tr -d ' ')"
