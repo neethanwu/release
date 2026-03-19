@@ -7,13 +7,8 @@ without modifying any files.
 
 ## Quick Context (Single Command)
 
-Gather all project context in a single command. This is faster than running
-each check individually, and other flows can reference this block to front-load
-context before precondition checks.
-
-This block assumes an npm-ecosystem project (Node.js available). Future
-adapters may need ecosystem-specific variants. Keep this block aligned with
-the Detailed Information section below — it mirrors those checks.
+Start by gathering all release context in one command. This block assumes
+Node.js is available (npm ecosystem). Future adapters may need variants.
 
 ```bash
 echo "=== Release Context ==="
@@ -30,16 +25,12 @@ echo "prepush_hook: $(test -f .git/hooks/pre-push && echo 'installed' || echo 'm
 echo "ci_workflows: $(ls .github/workflows/*.yml 2>/dev/null | wc -l | tr -d ' ')"
 ```
 
-Use this output to inform the detailed sections below. If any value is
-`unknown`, `not-found`, or the command block itself fails, fall back to
-gathering that specific item individually.
-
 ---
 
-## Detailed Information
+## Expanding Context
 
-Collect all of the following. If any step fails, note the failure and continue
-with the remaining steps.
+Use the quick context output as a starting point. The sections below provide
+additional detail for items that need deeper inspection.
 
 ### 1. Current Version
 

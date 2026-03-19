@@ -9,13 +9,8 @@ ecosystem-specific commands.
 
 ## Gotchas
 
-- **Never use `git push --follow-tags`.** It pushes ALL annotated tags in your
-  local repo, not just the one you created. Always push the specific tag:
-  `git push origin vX.Y.Z`.
-- **Always use annotated tags (`git tag -a`).** Lightweight tags (created without
-  `-a`) do not trigger GitHub Actions workflows that filter on `tags: ['v*']`.
-  The release flow uses `git tag -a vX.Y.Z -m "Release vX.Y.Z"` to ensure CI
-  publish workflows fire correctly.
+- **Never use `git push --follow-tags`.** Pushes ALL annotated tags, not just yours. Push the specific tag: `git push origin vX.Y.Z`.
+- **Always use annotated tags (`git tag -a`).** Lightweight tags don't trigger GitHub Actions `tags: ['v*']` workflows.
 
 ---
 
@@ -23,9 +18,8 @@ ecosystem-specific commands.
 
 All three checks must pass before proceeding.
 
-**Optional accelerator:** Run the [Quick Context](context.md#quick-context-single-command)
-block first to gather all project state in a single command. Use the output to
-evaluate the checks below without additional round trips.
+To reduce round trips, gather all release context in a single command
+using the [Quick Context](context.md#quick-context-single-command) block.
 
 ### Clean working directory
 
