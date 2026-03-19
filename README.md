@@ -64,13 +64,15 @@ Generates GitHub Actions workflows for CI testing and automated publishing on ta
 
 ## Supported Ecosystems
 
-| Ecosystem | Status | Manifest |
-|-----------|--------|----------|
-| npm / Node.js / Bun | Supported | `package.json` |
-| Python | Coming soon | `pyproject.toml` |
-| Go | Coming soon | `go.mod` |
+| Ecosystem | Status | Manifest | Distribution |
+|-----------|--------|----------|-------------|
+| npm / Node.js / Bun | Supported | `package.json` | npm registry (via CI) |
+| Swift / macOS | Supported | `Package.swift` + `Info.plist` | GitHub Releases (with artifact) |
+| Python | Coming soon | `pyproject.toml` | — |
+| Go | Coming soon | `go.mod` | — |
 
 The npm adapter auto-detects your package manager (npm, pnpm, yarn, bun) from lock files.
+The Swift adapter supports SPM-based macOS apps with Makefile build chains (build, sign, notarize, DMG).
 
 ## What It Handles
 

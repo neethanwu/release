@@ -1,14 +1,14 @@
 ---
 name: release
 description: >
-  Manages package release workflows for npm, Python, and Go ecosystems.
-  Detects project type from manifest files, bumps versions, transforms
-  changelogs (Keep a Changelog format), creates git commits and tags,
-  and optionally generates CI publishing workflows. Use when releasing
-  packages, cutting versions, publishing to registries, bumping versions,
-  setting up release infrastructure, checking release readiness,
-  doing a dry run before publishing, creating pre-release versions,
-  or tagging a new release.
+  Manages package release workflows for npm and Swift/macOS ecosystems
+  (Python and Go coming soon). Detects project type from manifest files,
+  bumps versions, transforms changelogs (Keep a Changelog format), creates
+  git commits and tags, and optionally generates CI publishing workflows
+  or GitHub Releases. Use when releasing packages, cutting versions,
+  publishing to registries, bumping versions, setting up release
+  infrastructure, checking release readiness, doing a dry run before
+  publishing, creating pre-release versions, or tagging a new release.
 ---
 
 # Release
@@ -52,9 +52,12 @@ Scan the project root for manifest files to determine the ecosystem:
 | File present | Ecosystem | Next step |
 |-------------|-----------|-----------|
 | `package.json` with a `version` field | **npm** | Read [adapters/npm.md](adapters/npm.md) |
+| `Package.swift` with `.executableTarget` | **Swift** | Read [adapters/swift.md](adapters/swift.md) |
 | `pyproject.toml` | **Python** | Not yet supported — print message and stop |
 | `go.mod` | **Go** | Not yet supported — print message and stop |
-| None of the above | **Unknown** | Print: "Unsupported project type. This skill supports: npm (now), Python and Go (coming soon)." and stop |
+| None of the above | **Unknown** | Print: "Unsupported project type. This skill supports: npm and Swift/macOS (now), Python and Go (coming soon)." and stop |
+
+To check for `.executableTarget`: `grep -q '\.executableTarget' Package.swift`
 
 For the **npm** ecosystem, also detect the package manager:
 
@@ -98,32 +101,15 @@ missing infrastructure (hook, CI) to offer post-release.
 
 ## Step 4: Route to Flow
 
-Load the adapter file and the appropriate flow file based on the command:
+Read the adapter file identified in Step 2, then follow the appropriate flow:
 
-### Stable Release (`patch`, `minor`, `major`)
-
-1. Read [adapters/npm.md](adapters/npm.md) for ecosystem-specific commands
-2. Follow [flows/release.md](flows/release.md) for the 10-step release flow
-
-### Pre-Release (`alpha`, `beta`, `rc`)
-
-1. Read [adapters/npm.md](adapters/npm.md) for ecosystem-specific commands
-2. Follow [flows/pre-release.md](flows/pre-release.md) for the pre-release flow
-
-### Context
-
-1. Read [adapters/npm.md](adapters/npm.md) for `read_version`
-2. Follow [flows/context.md](flows/context.md) for the status report
-
-### Dry Run
-
-1. Read [adapters/npm.md](adapters/npm.md) for ecosystem-specific commands
-2. Follow [flows/dry-run.md](flows/dry-run.md) for the simulation flow
-
-### Setup CI
-
-1. Read [adapters/npm.md](adapters/npm.md) for template selection
-2. Follow [flows/setup-ci.md](flows/setup-ci.md) for CI workflow generation
+| Command | Flow |
+|---------|------|
+| `patch`, `minor`, `major` | [flows/release.md](flows/release.md) — 10-step release flow |
+| `alpha`, `beta`, `rc` | [flows/pre-release.md](flows/pre-release.md) — pre-release flow |
+| `context` | [flows/context.md](flows/context.md) — read-only status report |
+| `dry` | [flows/dry-run.md](flows/dry-run.md) — simulation without mutations |
+| `setup-ci` | [flows/setup-ci.md](flows/setup-ci.md) — CI workflow generation |
 
 ---
 
@@ -131,7 +117,7 @@ Load the adapter file and the appropriate flow file based on the command:
 
 After a successful stable release (push completed), check and offer:
 
-1. **Pre-push hook not installed?** → "Would you like to install a pre-push hook to validate releases? It checks that tag versions match your package.json and changelog."
+1. **Pre-push hook not installed?** → "Would you like to install a pre-push hook to validate releases? It checks that tag versions match your manifest and changelog."
 
 2. **No CI publish workflow?** → Check if the remote contains `github.com`. If yes: "Would you like to generate GitHub Actions workflows for CI and automated publishing? Run `/release setup-ci`." If not on GitHub: "No CI publish workflow detected. `/release setup-ci` can generate GitHub Actions workflows if needed, but note that only GitHub Actions is supported at this time."
 
