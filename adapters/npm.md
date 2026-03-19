@@ -5,6 +5,32 @@ with a `version` field.
 
 ---
 
+## Gotchas
+
+- **`npm version` auto-commits.** By default, `npm version patch` creates a git
+  commit AND a tag. Always use `--no-git-tag-version` to bump the version field
+  only. The release flow controls commits and tags separately.
+- **`package-lock.json` gets modified on version bump.** Even with
+  `--no-git-tag-version`, npm updates the lockfile's `version` field. If the
+  lockfile is tracked, stage it alongside `package.json` in the release commit.
+- **Yarn classic `version` is unreliable.** `yarn version` does not consistently
+  support `--no-git-tag-version` across versions. Edit `package.json` directly
+  instead of using the CLI for yarn projects.
+- **Pre-release versions sort lexicographically in npm.** `1.0.0-alpha.10` sorts
+  before `1.0.0-alpha.2` in npm's registry. Use `git tag --sort=-v:refname` (git
+  version sort) when scanning for the latest pre-release sequence number.
+- **`pnpm publish` needs `--no-git-checks` from tagged commits.** pnpm detects
+  that HEAD is a tagged commit and complains about uncommitted lockfile changes
+  that don't actually exist. Add `--no-git-checks` in CI publish workflows.
+- **2FA can hang in non-interactive shells.** If the npm account has 2FA enabled
+  for publishing, `npm publish` blocks waiting for a OTP that can't be entered.
+  Use an automation token (`npm token create --type=automation`) or publish via
+  CI with `--provenance` and token auth.
+- **`npm pack --dry-run` output format differs between npm versions.** Don't
+  parse the output programmatically — display it to the user as-is for review.
+
+---
+
 ## Read Version
 
 Read the `version` field from `package.json`. Parse it as JSON — do not use regex.
@@ -82,14 +108,7 @@ but only if they exist. Skip any that are not defined.
 | `lint` or `check` | Run linting (prefer `lint`, fall back to `check`) |
 | `typecheck` | Run type checking |
 
-Use the detected package manager's run command:
-
-| Package manager | Run command |
-|----------------|-------------|
-| npm | `npm run <script>` |
-| pnpm | `pnpm run <script>` |
-| yarn | `yarn run <script>` |
-| bun | `bun run <script>` |
+Use the detected package manager's run command (e.g., `npm run <script>`).
 
 Abort on the first failing script. Print the failing command and its output.
 

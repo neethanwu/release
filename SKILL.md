@@ -6,7 +6,9 @@ description: >
   changelogs (Keep a Changelog format), creates git commits and tags,
   and optionally generates CI publishing workflows. Use when releasing
   packages, cutting versions, publishing to registries, bumping versions,
-  or setting up release infrastructure.
+  setting up release infrastructure, checking release readiness,
+  doing a dry run before publishing, creating pre-release versions,
+  or tagging a new release.
 ---
 
 # Release
@@ -82,18 +84,15 @@ Before proceeding, check for known unsupported configurations:
 
 ## Step 3: Check Infrastructure
 
-Before routing to a flow, check what infrastructure exists:
+Check for CHANGELOG.md with an `## [Unreleased]` section (case-insensitive),
+a pre-push hook at `.git/hooks/pre-push`, and CI publish workflows in
+`.github/workflows/`.
 
-1. **CHANGELOG.md** — Does it exist? Does it contain `## [Unreleased]` (case-insensitive)?
-2. **Pre-push hook** — Does `.git/hooks/pre-push` exist and contain release validation?
-3. **CI workflows** — Does `.github/workflows/` contain a file with `npm publish` or a publish step?
+For `context`: report what's missing — don't offer to create anything.
 
-If the command is `context`, just report what's missing — don't offer to create anything.
-
-For all other commands, if CHANGELOG.md is missing or has no `[Unreleased]` section:
-- Route to [flows/init.md](flows/init.md) to bootstrap before continuing.
-
-After init completes, note missing infrastructure (hook, CI) to offer at the end of the release.
+For all other commands: if CHANGELOG.md is missing or has no `[Unreleased]`
+section, route to [flows/init.md](flows/init.md) first. After init, note
+missing infrastructure (hook, CI) to offer post-release.
 
 ---
 

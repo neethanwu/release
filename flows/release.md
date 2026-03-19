@@ -7,9 +7,26 @@ ecosystem-specific commands.
 
 ---
 
+## Gotchas
+
+- **Never use `git push --follow-tags`.** It pushes ALL annotated tags in your
+  local repo, not just the one you created. Always push the specific tag:
+  `git push origin vX.Y.Z`.
+- **Always use annotated tags (`git tag -a`).** Lightweight tags (created without
+  `-a`) do not trigger GitHub Actions workflows that filter on `tags: ['v*']`.
+  The release flow uses `git tag -a vX.Y.Z -m "Release vX.Y.Z"` to ensure CI
+  publish workflows fire correctly.
+
+---
+
 ## Step 1: Validate Preconditions
 
 All three checks must pass before proceeding.
+
+**Optional accelerator:** Run the compound context block from
+[context.md](context.md#quick-context-single-command) first to gather all
+project state in a single command. Use the output to evaluate the checks below
+without additional round trips.
 
 ### Clean working directory
 
